@@ -4,6 +4,7 @@ import express from "express";
 
 import authRoutes from "./routes/authRoutes.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
+import tripRoutes from "./routes/tripRoutes.js";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/trips", authenticateToken, tripRoutes);
 
 app.get("/api/protected/me", authenticateToken, (req, res) => {
   res.json({ user: req.user });
