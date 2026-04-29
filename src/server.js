@@ -3,6 +3,7 @@ import cors from "cors";
 import express from "express";
 
 import authRoutes from "./routes/authRoutes.js";
+import destinationRoutes from "./routes/destinationRoutes.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
 import tripRoutes from "./routes/tripRoutes.js";
 
@@ -17,6 +18,7 @@ app.get("/health", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/trips", authenticateToken, tripRoutes);
+app.use("/api/destinations", authenticateToken, destinationRoutes);
 
 app.get("/api/protected/me", authenticateToken, (req, res) => {
   res.json({ user: req.user });
