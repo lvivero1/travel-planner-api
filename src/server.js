@@ -7,6 +7,11 @@ import authRoutes from "./routes/authRoutes.js";
 import destinationRoutes from "./routes/destinationRoutes.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
 import tripRoutes from "./routes/tripRoutes.js";
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import { fileURLToPath } from 'url';
+const swaggerPath = fileURLToPath(new URL('./swagger.yaml', import.meta.url));
+const swaggerSpec = YAML.load(swaggerPath);
 
 const app = express();
 
@@ -21,6 +26,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/trips", authenticateToken, tripRoutes);
 app.use("/api/destinations", authenticateToken, destinationRoutes);
 app.use("/api/activities", authenticateToken, activityRoutes);
+
+// Swagger UI (OpenAPI)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 
 app.get("/api/protected/me", authenticateToken, (req, res) => {
   res.json({ user: req.user });

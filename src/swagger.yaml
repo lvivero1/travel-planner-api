@@ -1,0 +1,271 @@
+openapi: 3.0.0
+info:
+  title: Travel Planner API
+  version: "1.0.0"
+  description: OpenAPI docs for Travel Planner (Steps 4-10).
+servers:
+  - url: http://localhost:3000
+    description: Local dev server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: owner
+        email:
+          type: string
+          example: owner@example.com
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJI...
+    Trip:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Summer Trip
+        startDate:
+          type: string
+          format: date-time
+          example: "2026-10-01T00:00:00.000Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2026-10-03T00:00:00.000Z"
+        userId:
+          type: integer
+          example: 1
+    Destination:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        city:
+          type: string
+          example: Barcelona
+        country:
+          type: string
+          example: Spain
+        tripId:
+          type: integer
+          example: 1
+    Activity:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Walking Tour
+        notes:
+          type: string
+          example: Meet at 9:00
+        destinationId:
+          type: integer
+          example: 1
+paths:
+  /api/auth/signup:
+    post:
+      tags: [Auth]
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required: [name, email, password]
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required: [email, password]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              examples:
+                success:
+                  value:
+                    token: eyJhbGciOiJI...
+  /api/trips:
+    get:
+      tags: [Trips]
+      security: [{ bearerAuth: [] }]
+      summary: List trips for authenticated user
+      responses:
+        '200':
+          description: Trips
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trip'
+    post:
+      tags: [Trips]
+      security: [{ bearerAuth: [] }]
+      summary: Create trip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+              required: [title, startDate, endDate]
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+  /api/trips/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Trips]
+      security: [{ bearerAuth: [] }]
+      summary: Get trip
+      responses:
+        '200':
+          description: Trip
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+  /api/destinations:
+    get:
+      tags: [Destinations]
+      security: [{ bearerAuth: [] }]
+      summary: List destinations
+      responses:
+        '200':
+          description: Destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Destination'
+    post:
+      tags: [Destinations]
+      security: [{ bearerAuth: [] }]
+      summary: Create destination
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                city:
+                  type: string
+                country:
+                  type: string
+                tripId:
+                  type: integer
+              required: [city, country, tripId]
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Destination'
+  /api/activities:
+    get:
+      tags: [Activities]
+      security: [{ bearerAuth: [] }]
+      summary: List activities
+      responses:
+        '200':
+          description: Activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+    post:
+      tags: [Activities]
+      security: [{ bearerAuth: [] }]
+      summary: Create activity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                notes:
+                  type: string
+                destinationId:
+                  type: integer
+              required: [name, destinationId]
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
