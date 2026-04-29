@@ -2,6 +2,7 @@ import "dotenv/config";
 import cors from "cors";
 import express from "express";
 
+import activityRoutes from "./routes/activityRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import destinationRoutes from "./routes/destinationRoutes.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
@@ -19,6 +20,7 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/trips", authenticateToken, tripRoutes);
 app.use("/api/destinations", authenticateToken, destinationRoutes);
+app.use("/api/activities", authenticateToken, activityRoutes);
 
 app.get("/api/protected/me", authenticateToken, (req, res) => {
   res.json({ user: req.user });
