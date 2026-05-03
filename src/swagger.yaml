@@ -5,7 +5,9 @@ info:
   description: OpenAPI docs for Travel Planner (Steps 4-10).
 servers:
   - url: http://localhost:3000
-    description: Local dev server
+    description: Local Development server
+  - url: https://travel-planner-api-u0r6.onrender.com
+    description: Production server
 components:
   securitySchemes:
     bearerAuth:
