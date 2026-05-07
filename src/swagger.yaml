@@ -109,6 +109,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '409':
+          description: Conflict - Email already exists
+        '400':
+          description: Missing required fields (name,email,password)
   /api/auth/login:
     post:
       tags: [Auth]
