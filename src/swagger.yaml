@@ -140,6 +140,12 @@ paths:
                 success:
                   value:
                     token: eyJhbGciOiJI...
+        '400':
+          description: Missing required fields (email,password)
+        '401':
+          description: Unauthorized - Invalid credentials
+          '500':
+            description: Server error
   /api/trips:
     get:
       tags: [Trips]
