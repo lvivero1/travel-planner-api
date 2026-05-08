@@ -160,6 +160,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Trip'
+        "401":
+          description: Unauthorized - Missing or invalid token
     post:
       tags: [Trips]
       security: [{ bearerAuth: [] }]
@@ -185,6 +187,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Trip'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '400':
+          description: Missing required fields (title,startDate,endDate)
   /api/trips/{id}:
     parameters:
       - name: id
@@ -203,6 +209,65 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Trip'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '404':
+          description: Not found - Trip does not exist or does not belong to user
+    put:
+      tags: [Trips]
+      security: [{ bearerAuth: [] }]
+      summary: Update trip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+                description:
+                  type: string
+                budget:
+                  type: number
+      responses:
+        '200':
+          description: Updated trip
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+        '400':
+          description: Validation error
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '404':
+          description: Not found - Trip does not exist or does not belong to user
+    delete:
+      tags: [Trips]
+      security: [{ bearerAuth: [] }]
+      summary: Delete trip
+      responses:
+        '200':
+          description: Trip deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Trip deleted
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '404':
+          description: Not found - Trip does not exist or does not belong to user
   /api/destinations:
     get:
       tags: [Destinations]
@@ -217,6 +282,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Destination'
+        '401':
+          description: Unauthorized - Missing or invalid token
     post:
       tags: [Destinations]
       security: [{ bearerAuth: [] }]
@@ -235,6 +302,10 @@ paths:
                 tripId:
                   type: integer
               required: [city, country, tripId]
+        '401':
+          description: Unauthorized - Missing or invalid token
+          '400':
+            description: Missing required fields (city,country,tripId) or tripId does not belong to user
       responses:
         '201':
           description: Created
@@ -242,6 +313,85 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Destination'
+  /api/destinations/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Destinations]
+      security: [{ bearerAuth: [] }]
+      summary: Get destination
+      responses:
+        '200':
+          description: Destination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Destination'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '404':
+          description: Not found - Destination does not exist or does not belong to user
+    put:
+      tags: [Destinations]
+      security: [{ bearerAuth: [] }]
+      summary: Update destination
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                city:
+                  type: string
+                country:
+                  type: string
+                arrivalDate:
+                  type: string
+                  format: date-time
+                departureDate:
+                  type: string
+                  format: date-time
+                notes:
+                  type: string
+                tripId:
+                  type: integer
+      responses:
+        '200':
+          description: Updated destination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Destination'
+        '400':
+          description: Validation error
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '404':
+          description: Not found - Destination does not exist or does not belong to user
+    delete:
+      tags: [Destinations]
+      security: [{ bearerAuth: [] }]
+      summary: Delete destination
+      responses:
+        '200':
+          description: Destination deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Destination deleted
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '404':
+          description: Not found - Destination does not exist or does not belong to user
   /api/activities:
     get:
       tags: [Activities]
@@ -256,6 +406,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Activity'
+        '401':
+          description: Unauthorized - Missing or invalid token
     post:
       tags: [Activities]
       security: [{ bearerAuth: [] }]
@@ -281,3 +433,85 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Activity'
+  /api/activities/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Activities]
+      security: [{ bearerAuth: [] }]
+      summary: Get activity
+      responses:
+        '200':
+          description: Activity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '404':
+          description: Not found - Activity does not exist or does not belong to user
+    put:
+      tags: [Activities]
+      security: [{ bearerAuth: [] }]
+      summary: Update activity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                activityDate:
+                  type: string
+                  format: date-time
+                cost:
+                  type: number
+                status:
+                  type: string
+                destinationId:
+                  type: integer
+      responses:
+        '200':
+          description: Updated activity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        '400':
+          description: Validation error
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '404':
+          description: Not found - Activity does not exist or does not belong to user
+    delete:
+      tags: [Activities]
+      security: [{ bearerAuth: [] }]
+      summary: Delete activity
+      responses:
+        '200':
+          description: Activity deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Activity deleted
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '404':
+          description: Not found - Activity does not exist or does not belong to user
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '400':
+          description: Missing required fields (name,destinationId) or destinationId does not belong to
